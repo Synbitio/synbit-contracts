@@ -93,6 +93,8 @@ contract SupplySchedule is Importable, ISupplySchedule {
         onlyAddress(CONTRACT_SYNBIT_TOKEN)
         returns (address[] memory recipients, uint256[] memory amounts)
     {
+        if (now < nextMintTime()) return (recipients, amounts);
+
         uint256 currentPeriod = currentPeriod();
         uint256 lastMintPeriod = lastMintPeriod();
 
@@ -158,7 +160,7 @@ contract SupplySchedule is Importable, ISupplySchedule {
         return _getPeriod(lastMintTime);
     }
 
-    function nextMintTime() external view returns (uint256) {
+    function nextMintTime() public view returns (uint256) {
         return lastMintTime.add(Setting().getMintPeriodDuration());
     }
 

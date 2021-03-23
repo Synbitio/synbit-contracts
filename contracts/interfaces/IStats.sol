@@ -123,4 +123,19 @@ interface IStats {
     function getPair(bytes32 fromAsset, bytes32 toAsset) external view returns (Pair memory);
 
     function getPairs() external view returns (Pair[] memory);
+
+    function getTradingFee(address account, uint256 period) external view returns (uint256);
+
+    function getDebtPercentage(
+        bytes32 stake,
+        address account,
+        uint256 period
+    ) external view returns (uint256);
+
+    function getPeriodLocked(
+        bytes32 asset,
+        address account,
+        uint256 period,
+        bool isPool
+    ) external view returns (uint256);
 }

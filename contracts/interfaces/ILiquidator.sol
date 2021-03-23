@@ -8,10 +8,9 @@ interface ILiquidator {
 
     function canLiquidate(bytes32 stake, address account) external view returns (bool);
 
-    function getLiquidable(bytes32 stake, address account)
-        external
-        view
-        returns (uint256 liquidable, uint256 unstakeAmount);
+    function getLiquidable(bytes32 stake, address account) external view returns (uint256);
+
+    function getUnstakable(bytes32 stake, uint256 amount) external view returns (uint256);
 
     function getAccounts(
         bytes32 stake,

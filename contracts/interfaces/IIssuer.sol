@@ -10,7 +10,8 @@ interface IIssuer {
     function burnDebt(
         bytes32 stake,
         address account,
-        uint256 amount
+        uint256 amount,
+        address payer
     ) external returns (uint256);
 
     function issueSynth(

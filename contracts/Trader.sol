@@ -151,7 +151,7 @@ contract Trader is Rewards, ITrader {
         return rewards.decimalMultiply(percentage);
     }
 
-    function getTradingFee(uint256 period) external view returns (uint256) {
-        return Storage().getTradingFee(address(0), period);
+    function getTradingFee(address account, uint256 period) external view returns (uint256) {
+        return Storage().getTradingFee(account, period);
     }
 }

@@ -56,6 +56,14 @@ contract Holder is Rewards, IHolder {
         return Lockable(asset).getTotalLocked();
     }
 
+    function getPeriodLocked(
+        bytes32 asset,
+        address account,
+        uint256 period
+    ) external view returns (uint256) {
+        return Storage().getLocked(asset, account, period);
+    }
+
     function claim(bytes32 asset, address account)
         external
         onlyAddress(CONTRACT_SYNBIT)

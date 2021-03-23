@@ -93,7 +93,8 @@ contract Issuer is Importable, ExternalStorable, IIssuer {
     function burnDebt(
         bytes32 stake,
         address account,
-        uint256 amount
+        uint256 amount,
+        address payer
     ) external onlyAddress(CONTRACT_SYNBIT) returns (uint256) {
         uint256 currentPeriod = getCurrentPeriod();
         uint256 totalDebt = getTotalDebt();
@@ -124,7 +125,7 @@ contract Issuer is Importable, ExternalStorable, IIssuer {
             lastTime
         );
 
-        Synth(USD).burn(account, burnableAmount);
+        Synth(USD).burn(payer, burnableAmount);
         return burnableAmount;
     }
 

@@ -129,7 +129,7 @@ contract Staker is Rewards, IStaker {
 
         if (asset == USD) {
             uint256 rewardPercentage = getRewardPercentage(asset);
-            rewards = Trader().getTradingFee(claimablePeriod).decimalMultiply(rewardPercentage);
+            rewards = Trader().getTradingFee(address(0), claimablePeriod).decimalMultiply(rewardPercentage);
             if (rewards == 0) return 0;
         }
 

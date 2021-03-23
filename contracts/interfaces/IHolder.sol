@@ -17,5 +17,11 @@ interface IHolder {
 
     function getTotalLocked(bytes32 asset) external view returns (uint256);
 
+    function getPeriodLocked(
+        bytes32 asset,
+        address account,
+        uint256 period
+    ) external view returns (uint256);
+
     function LOCK_ADDRESS() external view returns (address);
 }

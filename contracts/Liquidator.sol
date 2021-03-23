@@ -69,30 +69,31 @@ contract Liquidator is Importable, ExternalStorable, ILiquidator {
         return (currentCollateralRate <= liquidationCollateralRate);
     }
 
-    function getLiquidable(bytes32 stake, address account)
-        external
-        view
-        returns (uint256 liquidable, uint256 unstakeAmount)
-    {
-        if (!canLiquidate(stake, account)) return (0, 0);
+    function getLiquidable(bytes32 stake, address account) external view returns (uint256) {
+        if (!canLiquidate(stake, account)) return 0;
 
         uint256 debt = Issuer().getDebt(stake, account);
         uint256 collateralRate = Setting().getCollateralRate(stake);
         uint256 price = AssetPrice().getPrice(stake);
         uint256 currentStakeValue = Staker().getStaked(stake, account).decimalMultiply(price);
         uint256 minStakeValue = debt.decimalMultiply(collateralRate);
-        if (currentStakeValue >= minStakeValue) return (0, 0);
+        if (currentStakeValue >= minStakeValue) return 0;
 
         uint256 liquidationFeeRate = Setting().getLiquidationFeeRate(stake);
-        liquidable = minStakeValue.sub(currentStakeValue).decimalDivide(
-            collateralRate.sub(PreciseMath.DECIMAL_ONE()).sub(liquidationFeeRate)
-        );
+        uint256 liquidable =
+            minStakeValue.sub(currentStakeValue).decimalDivide(
+                collateralRate.sub(PreciseMath.DECIMAL_ONE()).sub(liquidationFeeRate)
+            );
         if (liquidable > debt)
             liquidable = currentStakeValue.decimalDivide(PreciseMath.DECIMAL_ONE().add(liquidationFeeRate));
 
-        unstakeAmount = liquidable.decimalMultiply(PreciseMath.DECIMAL_ONE().add(liquidationFeeRate)).decimalDivide(
-            price
-        );
+        return liquidable;
+    }
+
+    function getUnstakable(bytes32 stake, uint256 amount) external view returns (uint256) {
+        uint256 liquidationFeeRate = Setting().getLiquidationFeeRate(stake);
+        uint256 price = AssetPrice().getPrice(stake);
+        return amount.decimalMultiply(PreciseMath.DECIMAL_ONE().add(liquidationFeeRate)).decimalDivide(price);
     }
 
     function getAccounts(

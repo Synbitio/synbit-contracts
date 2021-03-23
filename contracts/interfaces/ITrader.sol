@@ -43,7 +43,7 @@ interface ITrader {
             uint256 toSynthPirce
         );
 
-    function getTradingFee(uint256 period) external view returns (uint256);
+    function getTradingFee(address account, uint256 period) external view returns (uint256);
 
     function FEE_ADDRESS() external view returns (address);
 }

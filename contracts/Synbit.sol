@@ -208,6 +208,7 @@ contract Synbit is Proxyable, Pausable, Importable, ISynbit {
 
         uint256 issueAmount = value.decimalDivide(collateralRate);
         Issuer().issueDebt(stake, msg.sender, issueAmount);
+
         History().addAction('Stake', msg.sender, 'Mint', stake, amount, USD, issueAmount);
         Liquidator().watchAccount(stake, msg.sender);
         SynbitToken().mint();
@@ -215,7 +216,7 @@ contract Synbit is Proxyable, Pausable, Importable, ISynbit {
     }
 
     function burn(bytes32 stake, uint256 amount) external onlyInitialized notPaused returns (bool) {
-        uint256 burnAmount = Issuer().burnDebt(stake, msg.sender, amount);
+        uint256 burnAmount = Issuer().burnDebt(stake, msg.sender, amount, msg.sender);
 
         (uint256 stakerTransferable, uint256 escrowTransferable) = Staker().getTransferable(stake, msg.sender);
         if (escrowTransferable > 0) Escrow().unstake(msg.sender, escrowTransferable);
@@ -338,20 +339,22 @@ contract Synbit is Proxyable, Pausable, Importable, ISynbit {
         address account,
         uint256 amount
     ) external onlyInitialized notPaused returns (bool) {
-        (uint256 liquidable, uint256 unstakeAmount) = Liquidator().getLiquidable(stake, account);
+        uint256 liquidable = Liquidator().getLiquidable(stake, account);
         liquidable.sub(amount, 'Synbit: liquidate amount exceeds liquidable');
 
+        uint256 unstakable = Liquidator().getUnstakable(stake, amount);
+        Issuer().burnDebt(stake, account, amount, msg.sender);
+        Staker().unstake(stake, account, unstakable);
+
         if (stake == nativeCoin) {
-            msg.sender.transfer(amount);
+            msg.sender.transfer(unstakable);
         } else {
             IERC20 token = IERC20(requireAsset('Stake', stake));
-            token.safeTransfer(msg.sender, amount.decimalsTo(PreciseMath.DECIMALS(), token.decimals()));
+            token.safeTransfer(msg.sender, unstakable.decimalsTo(PreciseMath.DECIMALS(), token.decimals()));
         }
 
-        Liquidator().watchAccount(stake, msg.sender);
         SynbitToken().mint();
-
-        emit Liquidated(msg.sender, stake, account, unstakeAmount, amount);
+        emit Liquidated(msg.sender, stake, account, unstakable, amount);
         return true;
     }
 }

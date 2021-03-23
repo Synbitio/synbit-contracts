@@ -412,4 +412,28 @@ contract Stats is Importable, IStats {
 
         return items;
     }
+
+    function getTradingFee(address account, uint256 period) external view returns (uint256) {
+        return Trader().getTradingFee(account, period);
+    }
+
+    function getDebtPercentage(
+        bytes32 stake,
+        address account,
+        uint256 period
+    ) external view returns (uint256) {
+        return Issuer().getDebtPercentage(stake, account, period);
+    }
+
+    function getPeriodLocked(
+        bytes32 asset,
+        address account,
+        uint256 period,
+        bool isPool
+    ) external view returns (uint256) {
+        return
+            (isPool)
+                ? Provider().getPeriodLocked(asset, account, period)
+                : Holder().getPeriodLocked(asset, account, period);
+    }
 }

@@ -44,6 +44,14 @@ contract Provider is Rewards, IProvider {
         return Storage().getLocked(asset, address(0), getCurrentPeriod());
     }
 
+    function getPeriodLocked(
+        bytes32 asset,
+        address account,
+        uint256 period
+    ) external view returns (uint256) {
+        return Storage().getLocked(asset, account, period);
+    }
+
     function claim(bytes32 asset, address account)
         external
         onlyAddress(CONTRACT_SYNBIT)
