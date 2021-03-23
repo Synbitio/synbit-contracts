@@ -1,0 +1,38 @@
+{
+    "name": "synbit",
+    "version": "1.0.0",
+    "description": "Synbit smart contracts",
+    "main": "truffle-config.js",
+    "directories": {
+        "contracts": "contracts",
+        "migrations": "migrations",
+        "test": "test"
+    },
+    "scripts": {
+        "lint": "prettier --write 'contracts/**/*.sol' 'test/**/*.js' 'migrations/**/*.js'",
+        "clean": "rm -Rf ./build",
+        "compile": "truffle compile",
+        "console": "truffle console",
+        "migrate": "truffle migrate --network test --reset",
+        "networks": "truffle networks",
+        "test": "truffle test",
+        "watch": "truffle watch"
+    },
+    "author": "Synbit",
+    "license": "MIT",
+    "devDependencies": {
+        "@truffle/hdwallet-provider": "^1.2.2",
+        "prettier": "^2.2.1",
+        "prettier-plugin-solidity": "^1.0.0-beta.5",
+        "truffle-flattener": "^1.5.0",
+        "truffle-plugin-verify": "^0.5.5"
+    },
+    "prettier": {
+        "printWidth": 120,
+        "semi": true,
+        "singleQuote": true,
+        "trailingComma": "es5",
+        "useTabs": false,
+        "tabWidth": 4
+    }
+}
