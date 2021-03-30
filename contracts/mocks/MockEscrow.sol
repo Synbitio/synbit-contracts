@@ -7,8 +7,9 @@ contract MockEscrow {
         uint256,
         address account,
         uint256 amount
-    ) external {
+    ) external returns (uint256 vestTime) {
         deposits[account] = deposits[account] + amount;
+        return 0;
     }
 
     function getStaked(address account) external view returns (uint256) {

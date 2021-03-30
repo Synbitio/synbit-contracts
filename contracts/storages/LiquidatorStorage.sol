@@ -16,6 +16,8 @@ contract LiquidatorStorage is ExternalStorage, ILiquidatorStorage {
         address account,
         uint256 time
     ) external onlyManager(managerName) {
+        if (_storage[stake][account][0] > 0) return;
+
         _storage[stake][account][1] = time;
         if (_storage[stake][account][0] == 0) _storage[stake][account][0] = _accounts[stake].push(account);
     }

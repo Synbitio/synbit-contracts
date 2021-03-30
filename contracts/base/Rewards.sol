@@ -30,7 +30,7 @@ contract Rewards is Importable, ExternalStorable, IRewards {
         bytes32 asset,
         address account,
         uint256 period
-    ) internal view returns (uint256) {
+    ) public view returns (uint256) {
         return RewardsStorage().getClaimed(asset, account, period);
     }
 
@@ -40,6 +40,8 @@ contract Rewards is Importable, ExternalStorable, IRewards {
     }
 
     function getRewardSupply(bytes32 recipient) internal view returns (uint256) {
+        if (now > SupplySchedule().nextMintTime()) return 0;
+
         uint256 period = getClaimablePeriod();
         return SupplySchedule().mintableSupply(recipient, period);
     }

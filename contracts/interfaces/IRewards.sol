@@ -3,6 +3,12 @@ pragma solidity <=0.5.4;
 interface IRewards {
     function getRewardPercentage(bytes32 asset) external view returns (uint256);
 
+    function getClaimed(
+        bytes32 asset,
+        address account,
+        uint256 period
+    ) external view returns (uint256);
+
     function claim(bytes32 asset, address account)
         external
         returns (

@@ -12,4 +12,8 @@ contract MockSetting {
     function getTradingFeeRate(bytes32) external pure returns (uint256) {
         return 0.003 ether;
     }
+
+    function getMintPeriodDuration() external pure returns (uint256) {
+        return 7 days;
+    }
 }

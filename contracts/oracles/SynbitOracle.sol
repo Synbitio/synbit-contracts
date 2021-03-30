@@ -3,12 +3,11 @@ pragma solidity <=0.5.4;
 import '../lib/SafeMath.sol';
 import '../base/ExternalStorable.sol';
 import '../interfaces/IOracle.sol';
+import '../interfaces/oracles/ISynbitOracle.sol';
 import '../interfaces/storages/IOracleStorage.sol';
 
-contract SynbitOracle is ExternalStorable, IOracle {
+contract SynbitOracle is ExternalStorable, IOracle, ISynbitOracle {
     using SafeMath for uint256;
-
-    event AssetPriceChanged(bytes32 indexed asset, uint256 indexed round, uint256 previousValue, uint256 newValue);
 
     constructor() public {
         contractName = 'SynbitOracle';

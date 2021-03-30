@@ -9,6 +9,10 @@ contract MockSupplySchedule {
         nextMintTime = _nextMintTime;
     }
 
+    function lastMintPeriod() external pure returns (uint256) {
+        return 3;
+    }
+
     function lastMintTime() external view returns (uint256) {
         return nextMintTime;
     }
