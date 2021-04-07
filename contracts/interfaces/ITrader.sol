@@ -26,7 +26,9 @@ interface ITrader {
             uint256 tradingAmount,
             uint256 tradingFee,
             uint256 fromSynthPrice,
-            uint256 toSynthPirce
+            uint256 toSynthPirce,
+            uint256 fromStatus,
+            uint256 toStatus
         );
 
     function getTradingAmountAndFee(

@@ -2,7 +2,7 @@ pragma solidity <=0.5.4;
 
 import './base/ExternalStorable.sol';
 import './interfaces/ISetting.sol';
-import './interfaces/storages//ISettingStorage.sol';
+import './interfaces/storages/ISettingStorage.sol';
 
 contract Setting is ExternalStorable, ISetting {
     bytes32 private constant COLLATERAL_RATE = 'CollateralRate';

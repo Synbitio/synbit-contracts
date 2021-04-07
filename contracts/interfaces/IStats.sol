@@ -8,6 +8,7 @@ interface IStats {
         bytes32 category;
         uint256 balance;
         uint256 price;
+        uint256 status;
     }
 
     struct Vault {
@@ -44,6 +45,7 @@ interface IStats {
         uint256 hight;
         uint256 volume;
         uint256 turnover;
+        uint256 status;
     }
 
     function getBalance(address account) external view returns (Asset[] memory);

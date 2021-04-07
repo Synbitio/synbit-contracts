@@ -112,7 +112,7 @@ contract Stats is Importable, IStats {
             bytes32 assetName = stakes[i];
             address assetAddress = requireAsset(STAKE, assetName);
             uint256 balance = _getBalance(assetName, assetAddress, account);
-            items[i] = Asset(assetName, assetAddress, '', balance, prices[i]);
+            items[i] = Asset(assetName, assetAddress, '', balance, prices[i], 0);
         }
 
         prices = AssetPrice().getPrices(synths);
@@ -120,7 +120,7 @@ contract Stats is Importable, IStats {
             bytes32 assetName = synths[i];
             address assetAddress = requireAsset(SYNTH, assetName);
             uint256 balance = _getBalance(assetName, assetAddress, account);
-            items[i.add(stakes.length)] = Asset(assetName, assetAddress, '', balance, prices[i]);
+            items[i.add(stakes.length)] = Asset(assetName, assetAddress, '', balance, prices[i], 0);
         }
 
         return items;
@@ -136,21 +136,28 @@ contract Stats is Importable, IStats {
         address account
     ) public view returns (Asset memory) {
         address assetAddress = requireAsset(assetType, assetName);
-        uint256 price = AssetPrice().getPrice(assetName);
+        (uint256 price, uint256 status) = AssetPrice().getPriceAndStatus(assetName);
         uint256 balance = _getBalance(assetName, assetAddress, account);
-        return Asset(assetName, assetAddress, _getCategory(assetType, assetAddress), balance, price);
+        return Asset(assetName, assetAddress, _getCategory(assetType, assetAddress), balance, price, status);
     }
 
     function getAssets(bytes32 assetType, address account) external view returns (Asset[] memory) {
         bytes32[] memory assets = assets(assetType);
-        uint256[] memory prices = AssetPrice().getPrices(assets);
+        (uint256[] memory prices, uint256[] memory status) = AssetPrice().getPricesAndStatus(assets);
         Asset[] memory items = new Asset[](assets.length);
 
         for (uint256 i = 0; i < assets.length; i++) {
             bytes32 assetName = assets[i];
             address assetAddress = requireAsset(assetType, assetName);
             uint256 balance = _getBalance(assetName, assetAddress, account);
-            items[i] = Asset(assetName, assetAddress, _getCategory(assetType, assetAddress), balance, prices[i]);
+            items[i] = Asset(
+                assetName,
+                assetAddress,
+                _getCategory(assetType, assetAddress),
+                balance,
+                prices[i],
+                status[i]
+            );
         }
 
         return items;
@@ -267,7 +274,7 @@ contract Stats is Importable, IStats {
         uint256 fromAmount,
         bytes32 toSynth
     ) external view returns (uint256 tradingAmount, uint256 tradingFee) {
-        (tradingAmount, tradingFee, , ) = Trader().getTradingAmountAndFee(fromSynth, fromAmount, toSynth);
+        (tradingAmount, tradingFee, , , , ) = Trader().getTradingAmountAndFee(fromSynth, fromAmount, toSynth);
     }
 
     function getTradingAmountAndFee(
@@ -360,8 +367,10 @@ contract Stats is Importable, IStats {
     function _getPair(
         bytes32 fromAsset,
         uint256 fromAssetPrice,
+        uint256 fromAssetStatus,
         bytes32 toAsset,
         uint256 toAssetPrice,
+        uint256 toAssetStatus,
         bytes32 category
     ) private view returns (Pair memory) {
         uint256 last = toAssetPrice.decimalDivide(fromAssetPrice);
@@ -372,15 +381,28 @@ contract Stats is Importable, IStats {
         hight = hight.max(last);
 
         return
-            Pair(fromAsset, fromAssetPrice, toAsset, toAssetPrice, category, open, last, low, hight, volume, turnover);
+            Pair(
+                fromAsset,
+                fromAssetPrice,
+                toAsset,
+                toAssetPrice,
+                category,
+                open,
+                last,
+                low,
+                hight,
+                volume,
+                turnover,
+                (fromAssetStatus == 0 && toAssetStatus == 0) ? 0 : 1
+            );
     }
 
     function getPair(bytes32 fromAsset, bytes32 toAsset) external view returns (Pair memory) {
-        uint256 fromAssetPrice = AssetPrice().getPrice(fromAsset);
-        uint256 toAssetPrice = AssetPrice().getPrice(toAsset);
+        (uint256 fromAssetPrice, uint256 fromAssetStatus) = AssetPrice().getPriceAndStatus(fromAsset);
+        (uint256 toAssetPrice, uint256 toAssetStatus) = AssetPrice().getPriceAndStatus(toAsset);
         address fromAssetAddress = requireAsset(SYNTH, fromAsset);
         bytes32 category = _getCategory(SYNTH, fromAssetAddress);
-        return _getPair(fromAsset, fromAssetPrice, toAsset, toAssetPrice, category);
+        return _getPair(fromAsset, fromAssetPrice, fromAssetStatus, toAsset, toAssetPrice, toAssetStatus, category);
     }
 
     function _addToPairs(Pair[] memory pairs, Pair memory pair) private pure returns (Pair[] memory) {
@@ -397,7 +419,7 @@ contract Stats is Importable, IStats {
         Pair[] memory items = new Pair[](0);
         if (assets.length < 2) return items;
 
-        uint256[] memory prices = AssetPrice().getPrices(assets);
+        (uint256[] memory prices, uint256[] memory status) = AssetPrice().getPricesAndStatus(assets);
 
         for (uint256 i = 0; i < assets.length; i++) {
             bytes32 fromAsset = assets[i];
@@ -406,7 +428,10 @@ contract Stats is Importable, IStats {
             for (uint256 j = 0; j < assets.length; j++) {
                 bytes32 toAsset = assets[j];
                 if (fromAsset == toAsset) continue;
-                items = _addToPairs(items, _getPair(fromAsset, prices[i], toAsset, prices[j], category));
+                items = _addToPairs(
+                    items,
+                    _getPair(fromAsset, prices[i], status[i], toAsset, prices[j], status[j], category)
+                );
             }
         }
 

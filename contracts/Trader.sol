@@ -57,11 +57,16 @@ contract Trader is Rewards, ITrader {
             uint256 toSynthPirce
         )
     {
-        (tradingAmount, tradingFee, fromSynthPrice, toSynthPirce) = getTradingAmountAndFee(
+        uint256 fromStatus;
+        uint256 toStatus;
+        (tradingAmount, tradingFee, fromSynthPrice, toSynthPirce, fromStatus, toStatus) = getTradingAmountAndFee(
             fromSynth,
             fromAmount,
             toSynth
         );
+
+        require(fromStatus == 0, 'Trader: fromSynth is offline');
+        require(toStatus == 0, 'Trader: toSynth is offline');
 
         Issuer().burnSynth(fromSynth, account, fromAmount);
         Issuer().issueSynth(toSynth, account, tradingAmount);
@@ -81,11 +86,13 @@ contract Trader is Rewards, ITrader {
             uint256 tradingAmount,
             uint256 tradingFee,
             uint256 fromSynthPrice,
-            uint256 toSynthPirce
+            uint256 toSynthPirce,
+            uint256 fromStatus,
+            uint256 toStatus
         )
     {
-        fromSynthPrice = AssetPrice().getPrice(fromSynth);
-        toSynthPirce = AssetPrice().getPrice(toSynth);
+        (fromSynthPrice, fromStatus) = AssetPrice().getPriceAndStatus(fromSynth);
+        (toSynthPirce, toStatus) = AssetPrice().getPriceAndStatus(toSynth);
 
         uint256 fromSynthValue = fromAmount.decimalMultiply(fromSynthPrice);
         tradingFee = fromSynthValue.decimalMultiply(Setting().getTradingFeeRate(toSynth));

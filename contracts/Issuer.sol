@@ -105,8 +105,9 @@ contract Issuer is Importable, ExternalStorable, IIssuer {
         (uint256 stakeDebt, ) = _getDebt(stake, address(0), currentPeriod, lastDebt, totalDebt);
 
         uint256 burnableAmount = accountDebt.min(amount);
-        uint256 newTotalDebt = totalDebt.sub(burnableAmount);
+        require(burnableAmount > 0, 'Issuer: burnable is zero');
 
+        uint256 newTotalDebt = totalDebt.sub(burnableAmount);
         uint256 newLastDebt = 0;
 
         if (newTotalDebt > 0) {

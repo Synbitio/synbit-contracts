@@ -72,9 +72,9 @@ contract Escrow is Importable, ExternalStorable, IEscrow {
     }
 
     function withdraw(address account, uint256 amount) external onlyAddress(CONTRACT_SYNBIT) {
-        Storage().decrementUint(BALANCE, account, amount, 'Escrow: withdraw amount exceeds balance');
         uint256 withdrawable = getWithdrawable(account);
         withdrawable.sub(amount, 'Escrow: withdraw amount exceeds withdrawable');
+        Storage().decrementUint(BALANCE, account, amount, 'Escrow: withdraw amount exceeds balance');
 
         Storage().incrementUint(WITHDRAWN, account, amount);
         IERC20(requireAddress(CONTRACT_SYNBIT_TOKEN)).safeTransfer(account, amount);
