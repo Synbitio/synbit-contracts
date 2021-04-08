@@ -5,6 +5,8 @@ import './interfaces/IOracle.sol';
 import './interfaces/IAssetPrice.sol';
 
 contract AssetPrice is AddressStorage, IAssetPrice {
+    uint256 public maxDelayTime = 3600;
+
     constructor() public {
         setContractName(CONTRACT_ASSET_PRICE);
     }
@@ -17,6 +19,11 @@ contract AssetPrice is AddressStorage, IAssetPrice {
     function removeOracle(bytes32 asset) external onlyOwner {
         emit OracleRemoved(asset, getAddressValue(asset));
         removeAddressValue(asset);
+    }
+
+    function setMaxDelayTime(uint256 time) external onlyOwner {
+        emit MaxDelayTimeChanged(maxDelayTime, time);
+        maxDelayTime = time;
     }
 
     function getPriceFromOracle(bytes32 asset)
@@ -49,7 +56,7 @@ contract AssetPrice is AddressStorage, IAssetPrice {
         (, uint256 price, uint256 updateTime) = getPriceFromOracle(asset);
         require(price > 0, contractName.concat(': Price is zero For ', asset));
 
-        uint256 lastTime = now - 3600;
+        uint256 lastTime = now - maxDelayTime;
         if (updateTime < lastTime) return (price, 1);
         return (price, 0);
     }

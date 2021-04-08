@@ -18,6 +18,7 @@ interface IAssetPrice {
             uint256
         );
 
+    event MaxDelayTimeChanged(uint256 indexed previousValue, uint256 indexed newValue);
     event OracleChanged(bytes32 indexed asset, address indexed previousValue, address indexed newValue);
     event OracleRemoved(bytes32 indexed asset, address indexed previousValue);
 }
