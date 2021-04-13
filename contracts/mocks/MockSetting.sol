@@ -1,4 +1,4 @@
-pragma solidity <=0.5.4;
+pragma solidity ^0.5.17;
 
 contract MockSetting {
     function getMinStakeTime() external pure returns (uint256) {

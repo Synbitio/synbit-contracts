@@ -1,4 +1,4 @@
-pragma solidity <=0.5.4;
+pragma solidity ^0.5.17;
 
 import '../lib/SafeMath.sol';
 import '../base/ExternalStorable.sol';
@@ -17,14 +17,14 @@ contract SynbitOracle is ExternalStorable, IOracle, ISynbitOracle {
         return IOracleStorage(getStorage());
     }
 
-    function setPrice(bytes32 asset, uint256 price) public onlyOwner {
+    function setPrice(bytes32 asset, uint256 price) public allManager {
         uint256 round = Storage().getRound(asset);
         (uint256 previousValue, ) = Storage().getPrice(asset, round);
         emit AssetPriceChanged(asset, round, previousValue, price);
         Storage().setPrice(asset, price);
     }
 
-    function setPrices(bytes32[] calldata assets, uint256[] calldata prices) external onlyOwner {
+    function setPrices(bytes32[] calldata assets, uint256[] calldata prices) external allManager {
         require(assets.length == prices.length, 'SynbitOracle: asset and price length mismatch');
         for (uint256 i = 0; i < assets.length; i++) {
             setPrice(assets[i], prices[i]);

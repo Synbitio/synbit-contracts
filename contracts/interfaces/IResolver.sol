@@ -1,4 +1,4 @@
-pragma solidity <=0.5.4;
+pragma solidity ^0.5.17;
 
 interface IResolver {
     function getAddress(bytes32 name) external view returns (address);

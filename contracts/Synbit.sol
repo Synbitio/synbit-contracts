@@ -1,4 +1,5 @@
-pragma solidity <=0.5.4;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.5.17;
 
 import './lib/SafeMath.sol';
 import './lib/PreciseMath.sol';
@@ -52,7 +53,8 @@ contract Synbit is Proxyable, Pausable, Importable, ISynbit {
             CONTRACT_PROVIDER,
             CONTRACT_MARKET,
             CONTRACT_HISTORY,
-            CONTRACT_LIQUIDATOR
+            CONTRACT_LIQUIDATOR,
+            CONTRACT_SPECIAL
         ];
         return true;
     }

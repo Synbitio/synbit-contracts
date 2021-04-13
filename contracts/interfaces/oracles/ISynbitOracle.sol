@@ -1,4 +1,4 @@
-pragma solidity <=0.5.4;
+pragma solidity ^0.5.17;
 
 interface ISynbitOracle {
     function setPrice(bytes32 asset, uint256 price) external;

@@ -1,4 +1,4 @@
-pragma solidity <=0.5.4;
+pragma solidity ^0.5.17;
 
 interface ISynth {
     function category() external view returns (bytes32);

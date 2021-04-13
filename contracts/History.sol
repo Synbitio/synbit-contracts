@@ -1,4 +1,5 @@
-pragma solidity <=0.5.4;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.5.17;
 pragma experimental ABIEncoderV2;
 
 import './lib/SafeMath.sol';
@@ -17,7 +18,7 @@ contract History is Importable, IHistory {
 
     constructor(IResolver _resolver) public Importable(_resolver) {
         setContractName(CONTRACT_HISTORY);
-        imports = [CONTRACT_SYNBIT, CONTRACT_SUPPLY_SCHEDULE];
+        imports = [CONTRACT_SYNBIT, CONTRACT_SUPPLY_SCHEDULE, CONTRACT_CROWDSALE];
     }
 
     function addAction(

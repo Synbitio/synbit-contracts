@@ -1,4 +1,4 @@
-pragma solidity <=0.5.4;
+pragma solidity ^0.5.17;
 
 contract MockStaker {
     mapping(address => uint256) _rate;

@@ -1,4 +1,4 @@
-pragma solidity <=0.5.4;
+pragma solidity ^0.5.17;
 
 contract MockIssuer {
     uint256 private _debtPercentage = 0.3 ether * 10**9;

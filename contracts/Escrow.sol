@@ -1,4 +1,5 @@
-pragma solidity <=0.5.4;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.5.17;
 
 import './lib/SafeMath.sol';
 import './lib/PreciseMath.sol';
@@ -36,7 +37,8 @@ contract Escrow is Importable, ExternalStorable, IEscrow {
             CONTRACT_SUPPLY_SCHEDULE,
             CONTRACT_STAKER,
             CONTRACT_PROVIDER,
-            CONTRACT_SPECIAL
+            CONTRACT_SPECIAL,
+            CONTRACT_CROWDSALE
         ];
     }
 

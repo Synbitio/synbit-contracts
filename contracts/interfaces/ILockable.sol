@@ -1,4 +1,4 @@
-pragma solidity <=0.5.4;
+pragma solidity ^0.5.17;
 
 interface ILockable {
     function lock(address account, uint256 amount) external returns (bool);

@@ -1,4 +1,4 @@
-pragma solidity <=0.5.4;
+pragma solidity ^0.5.17;
 
 contract MockAssetPrice {
     function getPrice(bytes32 asset) public pure returns (uint256) {

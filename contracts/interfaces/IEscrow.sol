@@ -1,4 +1,4 @@
-pragma solidity <=0.5.4;
+pragma solidity ^0.5.17;
 
 interface IEscrow {
     function deposit(
@@ -27,6 +27,8 @@ interface IEscrow {
     function getBalance(address account) external view returns (uint256);
 
     function getStaked(address account) external view returns (uint256);
+
+    function escrowDuration() external view returns (uint256);
 
     event EscrowDurationChanged(uint256 indexed previousValue, uint256 indexed newValue);
 }

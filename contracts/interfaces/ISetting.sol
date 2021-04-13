@@ -1,4 +1,4 @@
-pragma solidity <=0.5.4;
+pragma solidity ^0.5.17;
 
 interface ISetting {
     function getCollateralRate(bytes32 asset) external view returns (uint256);

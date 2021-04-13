@@ -1,4 +1,4 @@
-pragma solidity <=0.5.4;
+pragma solidity ^0.5.17;
 
 interface ISupplySchedule {
     function distributeSupply() external returns (address[] memory recipients, uint256[] memory amounts);

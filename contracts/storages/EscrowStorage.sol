@@ -1,4 +1,4 @@
-pragma solidity <=0.5.4;
+pragma solidity ^0.5.17;
 
 import './ExternalStorage.sol';
 import '../interfaces/storages/IEscrowStorage.sol';

@@ -1,4 +1,4 @@
-pragma solidity <=0.5.4;
+pragma solidity ^0.5.17;
 
 contract Constants {
     bytes32 internal constant SYN = 'SYN';
